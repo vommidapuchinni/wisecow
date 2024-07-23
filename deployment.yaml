@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: wisecow
-        image: monikavcube/m45:latest
+        image: monikavcube/wisecow-app:latest
         ports:
         - containerPort: 4499
