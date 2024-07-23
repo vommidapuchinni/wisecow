@@ -42,10 +42,17 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - name: Update kubeconfig
+      run: |
+        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
     - name: Create kubeconfig
       run: |
+        set -e  # Exit immediately if a command fails
         mkdir -p ${HOME}/.kube
-        echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+        echo "Decoding kubeconfig"
+        echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > ${HOME}/.kube/config
+        echo "Kubeconfig content:"
         cat ${HOME}/.kube/config
 
     - name: Deploy to Kubernetes
