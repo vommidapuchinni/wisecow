@@ -26,11 +26,11 @@ jobs:
           version: 'latest'
 
       - name: Update kubeconfig
-        run: aws eks --region ${{ secrets.AWS_DEFAULT_REGION }} update-kubeconfig --name your-cluster-name
+        run: aws eks --region ${{ secrets.AWS_DEFAULT_REGION }} update-kubeconfig --name jawan
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl create -f deployment.yaml --validate=false
+          kubectl create -f deployment.yaml
           kubectl create -f service.yaml
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }} # Optional if kubeconfig is set directly
