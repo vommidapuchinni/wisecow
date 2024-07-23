@@ -50,4 +50,3 @@ jobs:
       run: |
         kubectl create -f deployment.yaml --validate=false
         kubectl create -f service.yaml 
-
