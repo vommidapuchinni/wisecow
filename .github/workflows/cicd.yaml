@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,15 +26,14 @@ jobs:
           version: 'latest'
 
       - name: Update kubeconfig
-        run: aws eks --region ${{ secrets.AWS_DEFAULT_REGION }} update-kubeconfig --name jawan
+        run: |
+          aws eks --region ${{ secrets.AWS_DEFAULT_REGION }} update-kubeconfig --name jawan
 
       - name: Verify kubeconfig path
         run: |
-          echo $KUBECONFIG
+          echo "KUBECONFIG: $KUBECONFIG"
 
       - name: Deploy to Kubernetes
         run: |
           kubectl create -f deployment.yaml
           kubectl create -f service.yaml
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }} # Ensure this is correct
