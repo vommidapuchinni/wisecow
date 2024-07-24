@@ -57,5 +57,5 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        kubectl create -f wisecow/deployment.yaml --validate=false
         kubectl create -f wisecow/service.yaml
+        kubectl create -f wisecow/deployment.yaml
