@@ -44,5 +44,12 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f service.yaml --validate=false
+          kubectl version --client
+          kubectl config view
+          kubectl cluster-info
+
           kubectl apply -f deployment.yaml --validate=false
+          kubectl apply -f service.yaml --validate=false
+
+          echo "Deployment completed successfully."
+
