@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Configure log file
+LOG_FILE="app_health.log"
+
+# Application URL
+APP_URL="http://www.google.com"
+
+# Function to check application health
+check_application_health() {
+    response=$(curl -o /dev/null -s -w "%{http_code}\n" $APP_URL)
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+    if [ "$response" -eq 200 ]; then
+        echo "$timestamp - Application is up. Status code: $response" >> $LOG_FILE
+        echo "Application is up."
+    else
+        echo "$timestamp - Application is down or not responding. Status code: $response" >> $LOG_FILE
+        echo "Application is down or not responding. Status code: $response"
+    fi
+}
+
+check_application_health
