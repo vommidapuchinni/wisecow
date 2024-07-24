@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Configure log file path
+LOG_FILE="/home/monika/access.log"
+
+# Check if log file exists
+if [ ! -f "$LOG_FILE" ]; then
+    echo "Log file not found: $LOG_FILE"
+    exit 1
+fi
+
+# Function to count the number of 404 errors
+count_404_errors() {
+    grep " 404 " $LOG_FILE | wc -l
+}
+
+# Function to find the most requested pages
+most_requested_pages() {
+    awk '{print $7}' $LOG_FILE | sort | uniq -c | sort -rn | head -10
+}
+
+# Function to find the IP addresses with the most requests
+most_frequent_ips() {
+    awk '{print $1}' $LOG_FILE | sort | uniq -c | sort -rn | head -10
+}
+
+# Generate the report
+generate_report() {
+    echo "Log File Analysis Report"
+    echo "========================"
+    echo
+    echo "Total number of 404 errors: $(count_404_errors)"
+    echo
+    echo "Most requested pages:"
+    most_requested_pages
+    echo
+    echo "IP addresses with the most requests:"
+    most_frequent_ips
+    echo
+}
+
+# Main function to generate the report
+main() {
+    generate_report
+}
+
+main
+
