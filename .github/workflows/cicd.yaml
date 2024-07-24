@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-
+      
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,15 +27,7 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/wisecow-app:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/wisecow-app:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up AWS CLI
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -44,11 +36,6 @@ jobs:
 
     - name: Update kubeconfig
       run: |
-        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-
-    - name: Create kubeconfig
-      run: |
-        set -e  # Exit immediately if a command fails
         mkdir -p ${HOME}/.kube
         echo "Decoding kubeconfig"
         echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > ${HOME}/.kube/config
@@ -56,7 +43,6 @@ jobs:
         cat ${HOME}/.kube/config
 
     - name: Deploy to Kubernetes
-      continue-on-error: true
       run: |
-        kubectl create -f wisecow/service.yaml
-        kubectl create -f wisecow/deployment.yaml
+        kubectl apply -f wisecow/service.yaml
+        kubectl apply -f wisecow/deployment.yaml
