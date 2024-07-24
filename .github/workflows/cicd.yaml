@@ -56,7 +56,7 @@ jobs:
         cat ${HOME}/.kube/config
 
     - name: Deploy to Kubernetes
-	continue-on-error: true
+      continue-on-error: true
       run: |
         kubectl create -f deployment.yaml --validate=false
         kubectl create -f service.yaml
