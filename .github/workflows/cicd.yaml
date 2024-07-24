@@ -42,14 +42,15 @@ jobs:
           echo "Decoded kubeconfig contents:"
           cat ${HOME}/.kube/config
 
-      - name: Deploy to Kubernetes
+      - name: Check Kubernetes connectivity
         run: |
           kubectl version --client
           kubectl config view
           kubectl cluster-info
 
+      - name: Deploy to Kubernetes
+        run: |
           kubectl apply -f deployment.yaml --validate=false
           kubectl apply -f service.yaml --validate=false
 
           echo "Deployment completed successfully."
-
